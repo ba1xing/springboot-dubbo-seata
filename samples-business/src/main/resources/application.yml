@@ -1,0 +1,34 @@
+server:
+  port: 8104
+
+spring:
+  application:
+    name: dubbo-business-example
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+#============================dubbo config==============================================
+dubbo:
+  application:
+    id: dubbo-business-example
+    name: dubbo-business-example
+    qosEnable: false
+  protocol:
+    id: dubbo
+    name: dubbo
+    port: 10001
+  provider:
+    version: 1.0.0
+  registry:
+    address: nacos://127.0.0.1:8848
+    id: dubbo-business-example-registry
+
+#==================================nacos==============================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+

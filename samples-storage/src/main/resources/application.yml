@@ -1,0 +1,42 @@
+server:
+  port: 8100
+
+spring:
+  application:
+    name: dubbo-storage-example
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    password: 123
+    url: jdbc:mysql://127.0.0.1:3306/seata?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+
+#====================================Dubbo config===============================================
+dubbo:
+  application:
+    id: dubbo-storage-example
+    name: dubbo-storage-example
+    qosEnable: false
+  protocol:
+    id: dubbo
+    name: dubbo
+    port: 20882
+  registry:
+    address: nacos://127.0.0.1:8848
+    id: dubbo-storage-example-registry
+
+#===================================registry config==========================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+#=====================================mybatis config======================================
+mybatis:
+  mapper-locations: classpath*:/mapper/*.xml
+
+
