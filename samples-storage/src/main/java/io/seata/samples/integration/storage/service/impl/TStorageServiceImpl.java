@@ -1,4 +1,4 @@
-package io.seata.samples.integration.storage.service;
+package io.seata.samples.integration.storage.service.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import io.seata.samples.integration.common.dto.CommodityDTO;
@@ -6,6 +6,7 @@ import io.seata.samples.integration.common.enums.RspStatusEnum;
 import io.seata.samples.integration.common.response.ObjectResponse;
 import io.seata.samples.integration.storage.entity.TStorage;
 import io.seata.samples.integration.storage.mapper.TStorageMapper;
+import io.seata.samples.integration.storage.service.ITStorageService;
 import org.springframework.stereotype.Service;
 
 /**

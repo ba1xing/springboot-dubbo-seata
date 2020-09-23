@@ -1,4 +1,4 @@
-package io.seata.samples.integration.order.service;
+package io.seata.samples.integration.order.service.impl;
 
 import java.util.UUID;
 
@@ -12,6 +12,7 @@ import io.seata.samples.integration.common.enums.RspStatusEnum;
 import io.seata.samples.integration.common.response.ObjectResponse;
 import io.seata.samples.integration.order.entity.TOrder;
 import io.seata.samples.integration.order.mapper.TOrderMapper;
+import io.seata.samples.integration.order.service.ITOrderService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 

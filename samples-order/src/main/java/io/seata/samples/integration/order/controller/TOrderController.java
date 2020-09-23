@@ -3,6 +3,7 @@ package io.seata.samples.integration.order.controller;
 import io.seata.samples.integration.common.dto.OrderDTO;
 import io.seata.samples.integration.common.response.ObjectResponse;
 import io.seata.samples.integration.order.service.ITOrderService;
+import io.seata.samples.integration.order.mq.MsgProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- *  订单服务
+ * 订单服务
  * </p>
  *
  * @author heshouyou
@@ -31,10 +32,22 @@ public class TOrderController {
     @Autowired
     private ITOrderService orderService;
 
+    @Autowired
+    private MsgProducer msgProducer;
+
     @PostMapping("/create_order")
-    ObjectResponse<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO){
-        LOGGER.info("请求订单微服务：{}",orderDTO.toString());
+    ObjectResponse<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
+        LOGGER.info("请求订单微服务：{}", orderDTO.toString());
         return orderService.createOrder(orderDTO);
+    }
+
+    @PostMapping("/toNoticeStotage")
+    public ObjectResponse toNoticeStotage(String msg) {
+        LOGGER.info("消息：{}", msg);
+        msgProducer.sendMsg(msg);
+        ObjectResponse objectResponse = new ObjectResponse();
+        objectResponse.setData("succeess");
+        return objectResponse;
     }
 }
 

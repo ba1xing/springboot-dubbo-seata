@@ -10,9 +10,14 @@ spring:
         server-addr: 127.0.0.1:8848
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    password: 123
     url: jdbc:mysql://127.0.0.1:3306/seata?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
     username: root
+    password: 123
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
 
 #====================================Dubbo config===============================================
 dubbo:

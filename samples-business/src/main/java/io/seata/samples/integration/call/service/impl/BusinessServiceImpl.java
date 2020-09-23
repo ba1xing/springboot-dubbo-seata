@@ -1,8 +1,8 @@
-package io.seata.samples.integration.call.service;
+package io.seata.samples.integration.call.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-
 import io.seata.core.context.RootContext;
+import io.seata.samples.integration.call.service.BusinessService;
 import io.seata.samples.integration.common.dto.BusinessDTO;
 import io.seata.samples.integration.common.dto.CommodityDTO;
 import io.seata.samples.integration.common.dto.OrderDTO;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
  * @Date Created in 2019/1/14 18:36
  */
 @Service
-public class BusinessServiceImpl implements BusinessService{
+public class BusinessServiceImpl implements BusinessService {
 
     @Reference(version = "1.0.0")
     private StorageDubboService storageDubboService;
