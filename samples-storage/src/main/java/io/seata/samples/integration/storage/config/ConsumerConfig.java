@@ -49,6 +49,6 @@ public class ConsumerConfig {
 
     @Bean
     public Binding binding() {
-        return BindingBuilder.bind(queueA()).to(defaultExchange()).with(ConsumerConfig.ROUTINGKEY_A);
+        return BindingBuilder.bind(queueA()).to(defaultExchange()).with(ROUTINGKEY_A);
     }
 }
