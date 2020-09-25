@@ -7,11 +7,16 @@ import io.seata.samples.integration.common.response.ObjectResponse;
 import io.seata.samples.integration.storage.entity.TStorage;
 import io.seata.samples.integration.storage.mapper.TStorageMapper;
 import io.seata.samples.integration.storage.service.ITStorageService;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
- *  库存服务实现类
+ * 库存服务实现类
  * </p>
  *
  * @author heshouyou
@@ -20,16 +25,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class TStorageServiceImpl extends ServiceImpl<TStorageMapper, TStorage> implements ITStorageService {
 
+    @Resource
+    private RedissonClient redissonClient;
+
     @Override
     public ObjectResponse decreaseStorage(CommodityDTO commodityDTO) {
-        int storage = baseMapper.decreaseStorage(commodityDTO.getCommodityCode(), commodityDTO.getCount());
         ObjectResponse<Object> response = new ObjectResponse<>();
-        if (storage > 0){
-            response.setStatus(RspStatusEnum.SUCCESS.getCode());
-            response.setMessage(RspStatusEnum.SUCCESS.getMessage());
-            return response;
+        String key = "STORAGE_LOCK_" + commodityDTO.getCommodityCode();
+        RLock lock = redissonClient.getLock(key);
+        try {
+            lock.lock(10, TimeUnit.SECONDS);
+            int storage = baseMapper.decreaseStorage(commodityDTO.getCommodityCode(), commodityDTO.getCount());
+            if (storage > 0) {
+                response.setStatus(RspStatusEnum.SUCCESS.getCode());
+                response.setMessage(RspStatusEnum.SUCCESS.getMessage());
+                return response;
+            }
+        } finally {
+            lock.unlock();
         }
-
         response.setStatus(RspStatusEnum.FAIL.getCode());
         response.setMessage(RspStatusEnum.FAIL.getMessage());
         return response;
