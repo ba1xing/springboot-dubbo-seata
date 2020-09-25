@@ -39,7 +39,7 @@ public class RabbitConfig {
     @Value("${spring.rabbitmq.password}")
     private String password;
 
-    @Bean
+   /* @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory(host, port);
         connectionFactory.setUsername(username);
@@ -53,5 +53,5 @@ public class RabbitConfig {
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public RabbitTemplate rabbitTemplate() {
         return new RabbitTemplate(connectionFactory());
-    }
+    }*/
 }

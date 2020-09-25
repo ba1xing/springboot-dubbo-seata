@@ -1,5 +1,6 @@
 package io.seata.samples.integration.order.mq;
 
+import io.seata.samples.integration.common.dto.CommodityDTO;
 import io.seata.samples.integration.order.config.ProduceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,12 @@ public class MsgProducer implements RabbitTemplate.ConfirmCallback {
         CorrelationData correlationId = new CorrelationData(UUID.randomUUID().toString());
         //把消息放入ROUTINGKEY_A对应的队列当中去，对应的是队列A
         rabbitTemplate.convertAndSend(ProduceConfig.EXCHANGE_A, ProduceConfig.ROUTINGKEY_A, content, correlationId);
+    }
+
+    public void sendObect(CommodityDTO commodityDTO) {
+        CorrelationData correlationId = new CorrelationData(UUID.randomUUID().toString());
+        //把消息放入ROUTINGKEY_A对应的队列当中去，对应的是队列A
+        rabbitTemplate.convertAndSend(ProduceConfig.EXCHANGE_A, ProduceConfig.ROUTINGKEY_A, commodityDTO, correlationId);
     }
 
     /**

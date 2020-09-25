@@ -1,5 +1,6 @@
 package io.seata.samples.integration.order.controller;
 
+import io.seata.samples.integration.common.dto.CommodityDTO;
 import io.seata.samples.integration.common.dto.OrderDTO;
 import io.seata.samples.integration.common.response.ObjectResponse;
 import io.seata.samples.integration.order.service.ITOrderService;
@@ -45,6 +46,16 @@ public class TOrderController {
     public ObjectResponse toNoticeStotage(String msg) {
         LOGGER.info("消息：{}", msg);
         msgProducer.sendMsg(msg);
+        LOGGER.info("消息：{}", msg);
+        ObjectResponse objectResponse = new ObjectResponse();
+        objectResponse.setData("succeess");
+        return objectResponse;
+    }
+
+    @PostMapping("/toNoticeStotage1")
+    public ObjectResponse toNoticeStotage1(CommodityDTO commodityDTO) {
+        LOGGER.info("消息：{}", commodityDTO.toString());
+        msgProducer.sendObect(commodityDTO);
         ObjectResponse objectResponse = new ObjectResponse();
         objectResponse.setData("succeess");
         return objectResponse;
