@@ -34,12 +34,15 @@ public class TStorageServiceImpl extends ServiceImpl<TStorageMapper, TStorage> i
         String key = "STORAGE_LOCK_" + commodityDTO.getCommodityCode();
         RLock lock = redissonClient.getLock(key);
         try {
-            lock.lock(10, TimeUnit.SECONDS);
-            int storage = baseMapper.decreaseStorage(commodityDTO.getCommodityCode(), commodityDTO.getCount());
-            if (storage > 0) {
-                response.setStatus(RspStatusEnum.SUCCESS.getCode());
-                response.setMessage(RspStatusEnum.SUCCESS.getMessage());
-                return response;
+            //lock.lock(10, TimeUnit.SECONDS);
+            boolean isLock = lock.tryLock();
+            if (isLock) {
+                int storage = baseMapper.decreaseStorage(commodityDTO.getCommodityCode(), commodityDTO.getCount());
+                if (storage > 0) {
+                    response.setStatus(RspStatusEnum.SUCCESS.getCode());
+                    response.setMessage(RspStatusEnum.SUCCESS.getMessage());
+                    return response;
+                }
             }
         } finally {
             lock.unlock();
