@@ -9,9 +9,9 @@ import io.seata.samples.integration.storage.mapper.TStorageMapper;
 import io.seata.samples.integration.storage.service.ITStorageService;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class TStorageServiceImpl extends ServiceImpl<TStorageMapper, TStorage> implements ITStorageService {
 
-    @Resource
+    @Autowired
     private RedissonClient redissonClient;
 
     @Override
@@ -35,7 +35,7 @@ public class TStorageServiceImpl extends ServiceImpl<TStorageMapper, TStorage> i
         RLock lock = redissonClient.getLock(key);
         try {
             //lock.lock(10, TimeUnit.SECONDS);
-            boolean isLock = lock.tryLock();
+            boolean isLock = lock.tryLock(100, 10, TimeUnit.SECONDS);
             if (isLock) {
                 int storage = baseMapper.decreaseStorage(commodityDTO.getCommodityCode(), commodityDTO.getCount());
                 if (storage > 0) {
@@ -44,6 +44,8 @@ public class TStorageServiceImpl extends ServiceImpl<TStorageMapper, TStorage> i
                     return response;
                 }
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         } finally {
             lock.unlock();
         }
