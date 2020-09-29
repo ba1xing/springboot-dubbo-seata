@@ -9,6 +9,8 @@ import io.seata.samples.integration.storage.mapper.TStorageMapper;
 import io.seata.samples.integration.storage.service.ITStorageService;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,8 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class TStorageServiceImpl extends ServiceImpl<TStorageMapper, TStorage> implements ITStorageService {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private RedissonClient redissonClient;
 
@@ -37,6 +41,7 @@ public class TStorageServiceImpl extends ServiceImpl<TStorageMapper, TStorage> i
             //lock.lock(10, TimeUnit.SECONDS);
             boolean isLock = lock.tryLock(100, 10, TimeUnit.SECONDS);
             if (isLock) {
+                logger.info("加锁成功");
                 int storage = baseMapper.decreaseStorage(commodityDTO.getCommodityCode(), commodityDTO.getCount());
                 if (storage > 0) {
                     response.setStatus(RspStatusEnum.SUCCESS.getCode());
@@ -48,6 +53,7 @@ public class TStorageServiceImpl extends ServiceImpl<TStorageMapper, TStorage> i
             e.printStackTrace();
         } finally {
             lock.unlock();
+            logger.info("释放锁");
         }
         response.setStatus(RspStatusEnum.FAIL.getCode());
         response.setMessage(RspStatusEnum.FAIL.getMessage());
